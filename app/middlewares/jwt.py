@@ -1,12 +1,12 @@
 import hmac
 from hashlib import sha256
-from base64 import urlsafe_b64encode
-from json import dumps
+from base64 import urlsafe_b64decode, urlsafe_b64encode
+from json import dumps, loads
 from os import getenv
 
 
 
-def generate_token_jwt(header, payload):
+def generate_jwt_token(header, payload):
 
     SECRET_KEY_JWT = getenv('SECRET_KEY_JWT')
 
@@ -26,3 +26,22 @@ def generate_token_jwt(header, payload):
 
     return jwt_token
 
+def validate_jwt_token(jwt_token: str):
+
+    SECRET_KEY_JWT = getenv('SECRET_KEY_JWT')
+
+    encoded_header, encoded_payload, encoded_signature = jwt_token.split('.')
+
+    encoded_signature_check = urlsafe_b64encode(
+        hmac.new(
+            key=SECRET_KEY_JWT.encode(),
+            msg=f'{encoded_header}.{encoded_payload}'.encode(),
+            digestmod=sha256
+        ).digest()
+    ).decode()
+
+    payload = loads(urlsafe_b64decode(encoded_payload))
+
+    if encoded_signature_check != encoded_signature:
+        return False
+    return payload
