@@ -13,3 +13,6 @@ class UserRepository():
     
     def get_user_by_email(db: Session, payload: UserLoginSchema):
         return db.query(User).filter(User.email == payload.email).first()
+
+    def get_all_users(db: Session):
+        return db.query(User).order_by('id').all()
