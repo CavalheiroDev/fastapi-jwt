@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status, Depends
 from sqlalchemy.orm import Session
-from app.api.schemas import UserSchema
+from app.api.schemas.user import UserSchema
 from app.database.events import SessionLocal
 from app.database.repository import UserRepository
 from app.middlewares.hashed_password import generate_hashed_password
