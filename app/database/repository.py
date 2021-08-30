@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.database.models import User
-from app.api.schemas import UserSchema
+from app.api.schemas import UserSchema, UserLoginSchema
 
 
 class UserRepository():
@@ -11,3 +11,5 @@ class UserRepository():
         db.refresh(user)
         return user
     
+    def get_user_by_email(db: Session, payload: UserLoginSchema):
+        return db.query(User).filter(User.email == payload.email).first()
